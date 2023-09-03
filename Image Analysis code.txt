@@ -1,0 +1,1009 @@
+from contour_display import highlight_contours
+from stroke_thinning import thin_strokes
+from stroke_thickening import thicken_strokes
+from adaptive_smoothing import adaptive_smooth
+from contrast_correction import contrast_correction
+from contrast_stretching import contrast_stretching
+from gaussian_sharpening import gaussian_sharpen
+from saturation_correction import saturation_correction
+from gamma_correction import gamma_correction_and_display
+from Brightness_correction import adjust_and_show_brightness
+from mean_filter import mean_filter_and_display
+from median_filter import median_filter_and_display
+from bradley_local_threshold import bradley_local_thresholding
+from bilateral_smoothing import bilateral_smooth
+from Conservative_smooth import conservative_smooth
+from Histogram_equalise import histogram_equalize_and_display
+from Morphological_opening import morphological_opening_and_display
+from Morphological_closing import morphological_closing_and_display
+
+
+def main():
+    # Get the source image from the user
+    image_path = input("Enter the path to the image: ")
+    while True:
+        print("Select an operation:")
+        print("1. Contour Display")
+        print("2. Stroke Thinning")
+        print("3. Stroke Thickening")
+        print("4. Adaptive Smoothing")
+        print("5. Contrast Correction")
+        print("6. Contrast Stretching")
+        print("7. Gaussian Sharpening")
+        print("8. Saturation Correction")
+        print("9. Gamma Correction")
+        print("9b. Brightness Correction")
+        print("10. Mean Filter")
+        print("11. Median Filter")
+        print("12. Bradley Local Threshold")
+        print("13. Bilateral Smoothing")
+        print("14. Conservative Smooth")
+        print("15. Histogram Equalize")
+        print("16. Morphological Opening")
+        print("17. Morphological Closing")
+        print("0. Exit")
+
+        choice = input("Enter the number corresponding to the operation: ")
+
+        if choice == "1":
+            output_filename = input("Enter the output image filename")
+		 excel_filename = input(“Enter the excel filename”);
+            threshold_value = int(input("Enter the threshold value: "))
+            contour_color = tuple(map(int, input("Enter the contour color (comma-separated RGB values): ").split(',')))
+            contour_thickness = int(input("Enter the contour thickness: "))
+            image_path = highlight_contours(image_path, output_filename, excel_filename, threshold_value, contour_color, contour_thickness)
+
+        elif choice == "2":
+            output_path = input("Enter output file name or directory: ")
+            # Get additional parameters for stroke thinning
+            threshold_value = int(input("Enter threshold value: "))
+            min_neighbors = int(input("Enter min neighbors: "))
+            max_neighbors = int(input("Enter max neighbors: "))
+            max_transitions = int(input("Enter max transitions: "))
+            image_path = thin_strokes(image_path, output_path, threshold_value, min_neighbors, max_neighbors,max_transitions)
+
+        elif choice == "3":
+            output_path = input("Enter output file name or directory: ")
+            # Get additional parameters for stroke thickening
+            kernel_size = int(input("Enter kernel size: "))
+            iterations = int(input("Enter number of iterations: "))
+            image_path = thicken_strokes(image_path, output_path, (kernel_size, kernel_size), iterations)
+
+        elif choice == "4":
+            output_path = input("Enter output file name or directory: ")
+            kernel_size_input = int(input("Enter the kernel size: "))
+            image_path = adaptive_smooth(image_path, output_path, kernel_size_input)
+
+        elif choice == "5":
+            output_path = input("Enter output file name or directory: ")
+            alpha = float(input("Enter contrast factor: "))
+            beta = float(input("Enter brightness factor: "))
+            image_path = contrast_correction(image_path, output_path, alpha, beta)
+
+        elif choice == "6":
+            output_path = input("Enter output file name or directory: ")
+            image_path = contrast_stretching(image_path, output_path)
+
+        elif choice == "7":
+            output_path = input("Enter output file name or directory: ")
+            sigma = float(input("Enter the sigma value for Gaussian blur: "))
+            image_path = gaussian_sharpen(image_path, output_path, sigma)
+
+        elif choice == "8":
+            output_path = input("Enter output file name or directory: ")
+            alpha = float(input("Enter saturation scale factor: "))
+            beta = float(input("Enter saturation shift factor: "))
+            image_path = saturation_correction(image_path, output_path, alpha, beta)
+
+        elif choice == "9":
+            output_path = input("Enter output file name or directory: ")
+            gamma_value = float(input("Enter the gamma value: "))
+            image_path = gamma_correction_and_display(image_path, gamma_value, output_path)
+
+        elif choice == "9b":
+            output_path = input("Enter output file name or directory: ")
+            brightness_factor = float(input("Enter the brightness factor: "))
+            image_path = adjust_and_show_brightness(image_path, brightness_factor, output_path)
+
+        elif choice == "10":
+            output_path = input("Enter output file name or directory: ")
+            kernel_size = int(input("Enter the kernel size: "))
+            mean_filter_and_display(image_path, kernel_size,output_path)
+
+        elif choice == "11":
+            output_path = input("Enter output file name or directory: ")
+            kernel_size = int(input("Enter the kernel size: "))
+            image_path = median_filter_and_display(image_path, kernel_size, output_path)
+
+        elif choice == "12":
+            output_path = input("Enter output file name or directory: ")
+            window_size = int(input("Enter the window size: "))
+            threshold = int(input("Enter the threshold percentage: "))
+            image_path = bradley_local_thresholding(image_path, output_path, window_size, threshold)
+
+        elif choice == "13":
+            output_path = input("Enter output file name or directory: ")
+            diameter = int(input("Enter the diameter: "))
+            sigma_color = float(input("Enter the sigma color: "))
+            sigma_space = float(input("Enter the sigma space: "))
+            image_path = bilateral_smooth(image_path, output_path, diameter, sigma_color, sigma_space)
+
+        elif choice == "14":
+            output_path = input("Enter output file name or directory: ")
+            h = float(input("Enter the h value: "))
+            search_window = int(input("Enter the search window size: "))
+            patch_window = int(input("Enter the patch window size: "))
+            image_path = conservative_smooth(image_path, output_path, h, search_window, patch_window)
+
+        elif choice == "15":
+            output_path = input("Enter output file name or directory: ")
+            image_path = histogram_equalize_and_display(image_path, output_path)
+
+        elif choice == "16":
+            output_path = input("Enter output file name or directory: ")
+            kernel_width = int(input("Enter the kernel width: "))
+            kernel_height = int(input("Enter the kernel height: "))
+            kernel_size = (kernel_width, kernel_height)
+            image_path = morphological_opening_and_display(image_path, kernel_size, output_path)
+
+        elif choice == "17":
+            output_path = input("Enter output file name or directory: ")
+            kernel_width = int(input("Enter the kernel width: "))
+            kernel_height = int(input("Enter the kernel height: "))
+            kernel_size = (kernel_width, kernel_height)
+            image_path = morphological_closing_and_display(image_path, kernel_size, output_path)
+
+        elif choice == "0":
+            exit()
+
+        else:
+            print("Invalid choice. Please enter a valid number.")
+
+
+if __name__ == "__main__":
+    main()
+------------------------------CONTOUR_DISPLAY.py-------------------------------
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+def extract_contour_features(contour):
+    features = {}
+
+    # Perimeter
+    perimeter = cv2.arcLength(contour, True)
+    features['Perimeter'] = perimeter
+
+    # Area
+    area = cv2.contourArea(contour)
+    features['Area'] = area
+
+    # Compactness
+    compactness = perimeter ** 2 / (4 * np.pi * area)
+    features['Compactness'] = compactness
+
+    # Bounding Box
+    x, y, w, h = cv2.boundingRect(contour)
+    features['Bounding Box (x, y, width, height)'] = (x, y, w, h)
+
+    # Aspect Ratio
+    aspect_ratio = w / h if h != 0 else 0
+    features['Aspect Ratio'] = aspect_ratio
+
+    # Extent
+    extent = area / (w * h) if w * h != 0 else 0
+    features['Extent'] = extent
+
+    # Solidity
+    hull = cv2.convexHull(contour)
+    solidity = area / cv2.contourArea(hull) if cv2.contourArea(hull) != 0 else 0
+    features['Solidity'] = solidity
+
+    # Euler Number
+    euler_number = len(contour) - len(hull)
+    features['Euler Number'] = euler_number
+
+    # Orientation
+    _, _, angle = cv2.fitEllipse(contour)
+    features['Orientation Angle'] = angle
+
+    # Equivalent Diameter
+    equiv_diameter = np.sqrt(4 * area / np.pi)
+    features['Equivalent Diameter'] = equiv_diameter
+
+    # Feret Diameter (Maximum Caliper)
+    max_feret_diameter = cv2.minEnclosingCircle(contour)
+    features['Max Feret Diameter'] = max_feret_diameter[1] * 2
+
+    # Curvature and Convexity Defects (not calculated here, can be complex)
+
+    return features
+
+
+def highlight_and_extract_features(image_filename, output_filename=None, excel_filename=None, threshold_value=150,
+                                   contour_color=(0, 255, 0), contour_thickness=2):
+    # Read the image
+    image = cv2.imread(image_filename)
+
+    # Convert the image to grayscale
+    img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # Apply binary thresholding
+    ret, thresh = cv2.threshold(img_gray, threshold_value, 255, cv2.THRESH_BINARY)
+
+    # Detect the contours on the binary image using cv2.CHAIN_APPROX_SIMPLE
+    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    # Draw contours on the original image for `CHAIN_APPROX_SIMPLE`
+    image_copy = image.copy()
+    cv2.drawContours(image_copy, contours, -1, contour_color, contour_thickness, cv2.LINE_AA)
+
+    # Create a list to hold contour features
+    contour_features_list = []
+
+    # Extract features for each contour and store in the list
+    for idx, contour in enumerate(contours):
+        if len(contour) >= 5:  # Check if enough points to fit an ellipse
+            features = extract_contour_features(contour)
+            contour_features_list.append(features)
+
+    # Create a pandas DataFrame from the list of contour features
+    df = pd.DataFrame(contour_features_list)
+
+    # Display the DataFrame
+    print(df)
+
+    # Save the DataFrame to an Excel file if excel_filename is provided
+    if excel_filename:
+        df.to_excel(excel_filename, index=False)
+
+    # Display the images using Matplotlib
+    plt.figure(figsize=(12, 6))
+
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    plt.title('Original Image')
+    plt.axis('off')
+
+    plt.subplot(1, 2, 2)
+    plt.imshow(cv2.cvtColor(image_copy, cv2.COLOR_BGR2RGB))
+    plt.title('Image with Contours')
+    plt.axis('off')
+    plt.tight_layout()
+
+    # Save the image with drawn contours if output_filename is provided
+    if output_filename:
+        cv2.imwrite(output_filename, image_copy)
+
+    plt.show()
+    return output_filename
+
+-------------------------------STROKE_THINNING.py------------------------------
+import cv2
+import matplotlib.pyplot as plt
+
+def thin_strokes(input_image_path, output_image_path, threshold_value=128, min_neighbors=2, max_neighbors=6, max_transitions=1):
+    # Read the source image using cv2.imread
+    original_image = cv2.imread(input_image_path)
+    source_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+    # Threshold the image to convert it to binary
+    _, binary_image = cv2.threshold(source_image, threshold_value, 255, cv2.THRESH_BINARY)
+
+    # Ensure the image is binary and invert it (foreground pixels become 0, background pixels become 1)
+    binary_image = 1 - (binary_image // 255)
+
+    def check_pixel_deletion(x, y):
+        neighbors = [
+            binary_image[y - 1, x],
+            binary_image[y - 1, x + 1],
+            binary_image[y, x + 1],
+            binary_image[y + 1, x + 1],
+            binary_image[y + 1, x],
+            binary_image[y + 1, x - 1],
+            binary_image[y, x - 1],
+            binary_image[y - 1, x - 1]
+        ]
+        transitions = sum((a, b) == (0, 1) for a, b in zip(neighbors, neighbors[1:] + neighbors[:1]))
+        return (binary_image[y, x] == 1 and int(min_neighbors) <= sum(neighbors) <= int(max_neighbors) and transitions == max_transitions
+                and neighbors[0] * neighbors[2] * neighbors[4] == 0 and neighbors[2] * neighbors[4] * neighbors[6] == 0)
+
+    # Perform the Zhang-Suen Thinning Algorithm
+    rows, cols = binary_image.shape
+    changing = True
+    while changing:
+        changing = False
+        # First sub-iteration
+        to_delete = []
+        for y in range(1, rows - 1):
+            for x in range(1, cols - 1):
+                if check_pixel_deletion(x, y):
+                    to_delete.append((x, y))
+        for x, y in to_delete:
+            binary_image[y, x] = 0
+            changing = True
+        # Second sub-iteration
+        to_delete = []
+        for y in range(1, rows - 1):
+            for x in range(1, cols - 1):
+                if check_pixel_deletion(x, y):
+                    to_delete.append((x, y))
+        for x, y in to_delete:
+            binary_image[y, x] = 0
+            changing = True
+
+    # Invert the binary image back to its original format
+    binary_image = 1 - binary_image
+
+    # Convert the binary image back to the original color format
+    color_image = cv2.cvtColor(binary_image * source_image, cv2.COLOR_GRAY2BGR)
+
+    # Display the images using Matplotlib
+    plt.figure(figsize=(12, 6))
+
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
+    plt.title('Original Image')
+    plt.axis('off')
+
+    plt.subplot(1, 2, 2)
+    plt.imshow(cv2.cvtColor(color_image, cv2.COLOR_BGR2RGB))
+    plt.title('Output Image')
+    plt.axis('off')
+
+    plt.tight_layout()
+    plt.show()
+
+    # Save the color image to the destination path
+    cv2.imwrite(output_image_path, color_image)
+    return output_image_path
+
+---------------------------- stroke_thickening.py------------------------------
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+def thicken_strokes(image_path, output_path, kernel_size=(3, 3), iterations=1):
+    # Read the grayscale image
+    original_image = cv2.imread(image_path)
+    image = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+    # Invert the grayscale image (text will become black and background will become white)
+    inverted_image = cv2.bitwise_not(image)
+
+    # Create a structuring element for dilation
+    kernel = np.ones(kernel_size, dtype=np.uint8)
+
+    # Perform dilation on the inverted grayscale image
+    dilated_inverted_image = cv2.dilate(inverted_image, kernel, iterations=int(iterations))
+
+    # Invert the dilated image back to the original orientation
+    dilated_image = cv2.bitwise_not(dilated_inverted_image)
+
+    # Create a single Matplotlib window with two subplots
+    plt.figure(figsize=(10, 5))
+
+    # Original Image
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
+    plt.title('Original Image')
+    plt.axis('off')
+
+    # Thickened Image
+    plt.subplot(1, 2, 2)
+    plt.imshow(cv2.cvtColor(dilated_image, cv2.COLOR_BGR2RGB))
+    plt.title('Thickened Image')
+    plt.axis('off')
+
+    # Display the subplots
+    plt.tight_layout()
+    plt.show()
+
+    # Save the final image
+    cv2.imwrite(output_path, dilated_image)
+    return output_path
+------------------------------- Adaptive Smoothing.py--------------------------
+import cv2
+import matplotlib.pyplot as plt
+
+def adaptive_smooth(image_path, output_path, kernel_size=5):
+    # Load image
+    img = cv2.imread(image_path)
+
+    # Display the original and smoothed images using Matplotlib
+    plt.figure(figsize=(10, 5))
+
+    # Original Image
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+    plt.title('Original Image')
+    plt.axis('off')
+
+    # Add median filter to image
+    img_median = cv2.medianBlur(img, int(kernel_size))
+
+    # Smoothed Image
+    plt.subplot(1, 2, 2)
+    plt.imshow(cv2.cvtColor(img_median, cv2.COLOR_BGR2RGB))
+    plt.title('Smoothed Image')
+    plt.axis('off')
+
+    # Display the images
+    plt.tight_layout()
+    plt.show()
+
+    # Save the output image
+    cv2.imwrite(output_path, img_median)
+    return output_path
+
+------------------------ contrast_correction.py--------------------------------
+import cv2
+import matplotlib.pyplot as plt
+
+def contrast_correction(image_path, output_path, alpha, beta):
+    # Read the image in BGR format (OpenCV default)
+    image = cv2.imread(image_path)
+
+    # Display the input and output images using Matplotlib
+    plt.figure(figsize=(10, 5))
+
+    # Input Image
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    plt.title('Input Image')
+    plt.axis('off')
+
+    # Perform contrast correction using the formula: corrected_pixel = alpha * original_pixel + beta
+    corrected_image = cv2.convertScaleAbs(image, alpha=float(alpha), beta=float(beta))
+
+    # Output Image
+    plt.subplot(1, 2, 2)
+    plt.imshow(cv2.cvtColor(corrected_image, cv2.COLOR_BGR2RGB))
+    plt.title('Output Image')
+    plt.axis('off')
+
+    # Display the images
+    plt.tight_layout()
+    plt.show()
+
+    # Save the output image
+    cv2.imwrite(output_path, corrected_image)
+    return output_path
+---------------------------- contrast_stretching.py----------------------------
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+def contrast_stretching(image_path, output_path):
+    # Read the image
+    image = cv2.imread(image_path)
+
+    # Display the input and output images using Matplotlib
+    plt.figure(figsize=(10, 5))
+
+    # Input Image
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    plt.title('Input Image')
+    plt.axis('off')
+
+    # Get user-defined parameters
+    for channel in range(3):  # Loop through each color channel (R, G, B)
+        while True:
+            try:
+                min_val = int(input(f"Enter the minimum value for channel {channel}: "))
+                max_val = int(input(f"Enter the maximum value for channel {channel}: "))
+                break
+            except ValueError:
+                print("Invalid input. Please enter integer values.")
+
+        # Linearly scale the pixel intensities between 0 and 255
+        stretched_channel = ((image[:, :, channel] - min_val) / (max_val - min_val)) * 255
+        stretched_channel = np.clip(stretched_channel, 0, 255)
+
+        # Replace the channel in the stretched image
+        image[:, :, channel] = stretched_channel
+
+    # Convert the pixel values to integers
+    stretched_image = image.astype('uint8')
+
+    # Output Image
+    plt.subplot(1, 2, 2)
+    plt.imshow(cv2.cvtColor(stretched_image, cv2.COLOR_BGR2RGB))
+    plt.title('Output Image')
+    plt.axis('off')
+
+    # Display the images
+    plt.tight_layout()
+    plt.show()
+
+    # Save the output image
+    cv2.imwrite(output_path, stretched_image)
+    return output_path
+---------------------------gaussian_sharpening.py------------------------------
+import cv2
+
+import matplotlib.pyplot as plt
+
+def gaussian_sharpen(image_path, output_path, sigma=1.0):
+    # Read the image
+    image = cv2.imread(image_path)
+
+    # Display the input and output images using Matplotlib
+    plt.figure(figsize=(10, 5))
+
+    # Input Image
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    plt.title('Input Image')
+    plt.axis('off')
+
+    # Apply Gaussian blur to the image
+    blurred = cv2.GaussianBlur(image, (0, 0), sigma)
+
+    # Calculate the sharpened image by subtracting the blurred image from the original image
+    sharpened_image = cv2.addWeighted(image, 1.5, blurred, -0.5, 0)
+
+    # Output Image
+    plt.subplot(1, 2, 2)
+    plt.imshow(cv2.cvtColor(sharpened_image, cv2.COLOR_BGR2RGB))
+    plt.title('Sharpened Image')
+    plt.axis('off')
+
+    # Display the images
+    plt.tight_layout()
+    plt.show()
+
+    # Save the output image
+    cv2.imwrite(output_path, sharpened_image)
+    return output_path
+---------------------------saturation_correction.py---------------------------
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+def saturation_correction(image_path, output_path, alpha=1.0, beta=0):
+    # Read the image
+    image = cv2.imread(image_path)
+    if image is None:
+        print("Error: Unable to read the image.")
+        return
+
+    # Convert the image to the HSV color space
+    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    if hsv_image is None:
+        print("Error: Unable to convert the image to HSV color space.")
+        return
+
+    # Split the HSV image into its individual channels (Hue, Saturation, Value)
+    h, s, v = cv2.split(hsv_image)
+
+    # Convert the saturation channel to the appropriate data type (uint8)
+    s = s.astype(np.uint8)
+
+    # Perform saturation correction by applying an affine transformation to the Saturation channel
+    corrected_s = np.clip(alpha * s + beta, 0, 255).astype(np.uint8)
+
+    # Merge the corrected Saturation channel with the original Hue and Value channels
+    corrected_hsv = cv2.merge([h, corrected_s, v])
+
+    # Convert the corrected HSV image back to the BGR color space
+    corrected_image = cv2.cvtColor(corrected_hsv, cv2.COLOR_HSV2BGR)
+
+    # Display the input and output images using Matplotlib
+    plt.figure(figsize=(10, 5))
+
+    # Input Image
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    plt.title('Input Image')
+    plt.axis('off')
+
+    # Output Image
+    plt.subplot(1, 2, 2)
+    plt.imshow(cv2.cvtColor(corrected_image, cv2.COLOR_BGR2RGB))
+    plt.title('Corrected Image')
+    plt.axis('off')
+
+    # Display the images
+    plt.tight_layout()
+    plt.show()
+
+    # Save the corrected image
+    cv2.imwrite(output_path, corrected_image)
+    return output_path
+---------------------------gamma_correction.py---------------------------------
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def gamma_correction_and_display(image_path, gamma_value=1.0, output_path=""):
+    try:
+        original_image = cv2.imread(image_path)
+        if original_image is None:
+            raise FileNotFoundError("Image not found. Please provide a valid image path.")
+    except Exception as e:
+        print(f"Error: {e}")
+        return
+
+    corrected_image = np.power(original_image / 255.0, gamma_value) * 255
+
+    plt.figure(figsize=(10, 5))
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
+    plt.title("Original Image")
+    plt.axis("off")
+
+    plt.subplot(1, 2, 2)
+    plt.imshow(cv2.cvtColor(corrected_image.astype(np.uint8), cv2.COLOR_BGR2RGB))
+    plt.title(f"Gamma-Corrected Image (Gamma = {gamma_value})")
+    plt.axis("off")
+    plt.show()
+    # Save the corrected image
+    cv2.imwrite(output_path, corrected_image)
+    return output_path
+---------------------------Brightness_correction.py----------------------------
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def adjust_and_show_brightness(image_path, brightness_factor, output_path=""):
+    try:
+        original_image = cv2.imread(image_path)
+        if original_image is None:
+            raise FileNotFoundError("Image not found. Please provide a valid image path.")
+    except Exception as e:
+        print(f"Error: {e}")
+        return
+
+    corrected_image = cv2.convertScaleAbs(original_image, alpha=brightness_factor, beta=0)
+
+    plt.figure(figsize=(12, 6))
+
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
+    plt.title("Original Image")
+    plt.axis("off")
+
+    plt.subplot(1, 2, 2)
+    plt.imshow(cv2.cvtColor(corrected_image, cv2.COLOR_BGR2RGB))
+    plt.title(f"Brightness Corrected Image (Factor = {brightness_factor})")
+    plt.axis("off")
+    plt.show()
+    cv2.imwrite(output_path, corrected_image)
+    return output_path
+--------------------------------mean_filter.py---------------------------------
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+def mean_filter_and_display(image_path, kernel_size,output_path):
+    try:
+        original_image = cv2.imread(image_path)
+        if original_image is None:
+            raise FileNotFoundError("Image not found. Please provide a valid image path.")
+    except Exception as e:
+        print(f"Error: {e}")
+        return
+
+    def mean_filter(image, kernel_size):
+        return cv2.blur(image, (kernel_size, kernel_size))
+
+    filtered_image = mean_filter(original_image, kernel_size)
+
+    plt.figure(figsize=(12, 6))
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
+    plt.title("Original Image")
+    plt.axis("off")
+
+    plt.subplot(1, 2, 2)
+    plt.imshow(cv2.cvtColor(filtered_image, cv2.COLOR_BGR2RGB))
+    plt.title(f"Mean Filtered Image (Kernel Size: {kernel_size})")
+    plt.axis("off")
+    plt.show()
+    cv2.imwrite(output_path, filtered_image)
+    return output_path
+----------------------------------Median Filter.py-----------------------------
+import cv2
+import matplotlib.pyplot as plt
+
+
+def median_filter_and_display(image_path, kernel_size, output_path):
+    def median_filter(image, kernel_size):
+        return cv2.medianBlur(image, kernel_size)
+
+    try:
+        original_image = cv2.imread(image_path)
+        if original_image is None:
+            raise FileNotFoundError("Image not found. Please provide a valid image path.")
+    except Exception as e:
+        print(f"Error: {e}")
+        return
+
+    filtered_image = median_filter(original_image, kernel_size)
+
+    plt.figure(figsize=(12, 6))
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
+    plt.title("Original Image")
+    plt.axis("off")
+
+    plt.subplot(1, 2, 2)
+    plt.imshow(cv2.cvtColor(filtered_image, cv2.COLOR_BGR2RGB))
+    plt.title(f"Median Filtered Image (Kernel Size: {kernel_size})")
+    plt.axis("off")
+    plt.savefig(output_path)
+    plt.show()
+    return output_path
+------------------------Bradley Local Threshold.py-----------------------------
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def bradley_local_thresholding(image_path, output_path, window_size=30, threshold=10):
+    try:
+        gray_image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+        if gray_image is None:
+            raise FileNotFoundError("Image not found. Please provide a valid image path.")
+    except Exception as e:
+        print(f"Error: {e}")
+        return
+
+    # Calculate the integral image
+    integral_image = cv2.integral(gray_image)
+    height, width = gray_image.shape
+
+    # Apply the Bradley Local Thresholding algorithm
+    thresholded_image = np.zeros((height, width), dtype=np.uint8)
+    for y in range(height):
+        for x in range(width):
+            x1, y1, x2, y2 = max(0, x - window_size // 2), max(0, y - window_size // 2), min(width - 1,
+                                                                                             x + window_size // 2), min(
+                height - 1, y + window_size // 2)
+            area = (x2 - x1) * (y2 - y1)
+            threshold_sum = integral_image[y2, x2] - integral_image[y1, x2] - integral_image[y2, x1] + integral_image[
+                y1, x1]
+            if gray_image[y, x] * area <= threshold_sum * (100 - threshold) / 100:
+                thresholded_image[y, x] = 0
+            else:
+                thresholded_image[y, x] = 255
+
+    plt.figure(figsize=(10, 5))
+    plt.subplot(1, 2, 1)
+    plt.imshow(gray_image, cmap='gray')
+    plt.title("Original Image")
+    plt.axis("off")
+
+    plt.subplot(1, 2, 2)
+    plt.imshow(thresholded_image, cmap='gray')
+    plt.title(f"Bradley Local Thresholding (Window Size: {window_size}, Threshold: {threshold}%)")
+    plt.axis("off")
+
+    plt.savefig(output_path)
+    plt.show()
+    return output_path
+
+
+---------------------------------bilateral_smoothing.py------------------------
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+def bilateral_smooth(image_path, output_path, diameter, sigma_color, sigma_space):
+    try:
+        original_image = cv2.imread(image_path)
+        if original_image is None:
+            raise FileNotFoundError("Image not found. Please provide a valid image path.")
+    except Exception as e:
+        print(f"Error: {e}")
+        return
+
+    # Apply bilateral smoothing using the cv2.bilateralFilter function
+    smoothed_image = cv2.bilateralFilter(original_image, diameter, sigma_color, sigma_space)
+
+    plt.figure(figsize=(12, 6))
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
+    plt.title("Original Image")
+    plt.axis("off")
+
+    plt.subplot(1, 2, 2)
+    plt.imshow(cv2.cvtColor(smoothed_image, cv2.COLOR_BGR2RGB))
+    plt.title("Bilateral Smoothed Image")
+    plt.axis("off")
+
+    plt.savefig(output_path)
+    plt.show()
+    return output_path
+
+---------------------------------Conservative_Smooth.py------------------------
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+def conservative_smooth(image_path, output_path, h, search_window, patch_window):
+    try:
+        original_image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+        if original_image is None:
+            raise FileNotFoundError("Image not found. Please provide a valid image path.")
+    except Exception as e:
+        print(f"Error: {e}")
+        return
+
+    # Apply the Non-Local Means filter for conservative smoothing
+    smoothed_image = cv2.fastNlMeansDenoising(original_image, None, h, search_window, patch_window)
+
+    plt.figure(figsize=(10, 5))
+
+    plt.subplot(1, 2, 1)
+    plt.imshow(original_image, cmap='gray')
+    plt.title("Original Image")
+    plt.axis("off")
+
+    plt.subplot(1, 2, 2)
+    plt.imshow(smoothed_image, cmap='gray')
+    plt.title("Conservative Smoothed Image")
+    plt.axis("off")
+
+    plt.savefig(output_path)
+    plt.show()
+    return output_path
+---------------------------------Histogram_Equalize.py------------------------
+import cv2
+import matplotlib.pyplot as plt
+
+
+def histogram_equalize_and_display(image_path,output_path):
+    try:
+        original_image = cv2.imread(image_path)
+        if original_image is None:
+            raise FileNotFoundError("Image not found. Please provide a valid image path.")
+    except Exception as e:
+        print(f"Error: {e}")
+        return
+
+    # Convert the image to grayscale if it's in color
+    if len(original_image.shape) == 3:
+        original_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+
+    equalized_image = cv2.equalizeHist(original_image)
+
+    plt.figure(figsize=(12, 6))
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
+    plt.title("Original Image")
+    plt.axis("off")
+
+    plt.subplot(1, 2, 2)
+    plt.imshow(equalized_image, cmap='gray')
+    plt.title("Histogram Equalized Image")
+    plt.savefig(output_path)
+    plt.axis("off")
+    plt.show()
+    return output_path
+---------------------------------Morphological_Opening.py----------------------
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+def morphological_opening_and_display(image_path, kernel_size=(5, 5),output_path=""):
+    try:
+        # Read the image
+        original_image = cv2.imread(image_path)
+        if original_image is None:
+            raise FileNotFoundError("Image not found. Please provide a valid image path.")
+    except Exception as e:
+        print(f"Error: {e}")
+        return
+
+    # Convert the image to grayscale
+    gray_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+    # Define the kernel for morphological operations
+    kernel = np.ones(kernel_size, np.uint8)
+    # Perform morphological opening
+    opened_image = cv2.morphologyEx(gray_image, cv2.MORPH_OPEN, kernel)
+
+    plt.figure(figsize=(10, 5))
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
+    plt.title("Original Image")
+    plt.axis('off')
+    plt.subplot(1, 2, 2)
+    plt.imshow(opened_image, cmap='gray')
+    plt.title("Morphological Opening")
+    plt.axis('off')
+    plt.savefig(output_path)
+    plt.show()
+    return output_path
+---------------------------------Morphological_closing.py----------------------
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def morphological_closing_and_display(image_path, kernel_size, output_path):
+    try:
+        # Read the image
+        original_image = cv2.imread(image_path)
+        if original_image is None:
+            raise FileNotFoundError("Image not found. Please provide a valid image path.")
+    except Exception as e:
+        print(f"Error: {e}")
+        return
+
+    # Convert the image to grayscale
+    gray_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+    # Create a kernel for morphological operations
+    kernel = np.ones(kernel_size, np.uint8)
+    # Perform morphological closing
+    closed_image = cv2.morphologyEx(gray_image, cv2.MORPH_CLOSE, kernel)
+
+    plt.figure(figsize=(10, 5))
+    plt.subplot(1, 2, 1)
+    plt.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
+    plt.title("Original Image")
+    plt.axis('off')
+    plt.subplot(1, 2, 2)
+    plt.imshow(closed_image, cmap='gray')
+    plt.title("Morphological Closing")
+    plt.axis('off')
+    plt.savefig(output_path)
+    plt.show()
+    return output_path
+------------------------------------PROGRAM TO DETECT HORIZONTAL AND VERTICAL--------------------------------
+							LINES
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+def preprocess_image(image_path):
+    image = cv2.imread(image_path)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    _, threshold = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV)
+    return threshold
+
+def extract_vertical_lines(image):
+    vertical_kernel = np.ones((6, 1), dtype=np.uint8)
+    vertical_lines = cv2.morphologyEx(image, cv2.MORPH_OPEN, vertical_kernel)
+    return vertical_lines
+
+def extract_horizontal_lines(image):
+    horizontal_kernel = np.ones((1, 6), dtype=np.uint8)
+    horizontal_lines = cv2.morphologyEx(image, cv2.MORPH_OPEN, horizontal_kernel)
+    return horizontal_lines
+
+if __name__ == "__main__":
+    print("Vertical and Horizontal Line Detection Between Alphabets")
+    print("Please provide the path to the signature image.")
+
+    image_path = input("Enter the path to the signature image: ")
+
+    preprocessed_image = preprocess_image(image_path)
+
+    vertical_lines = extract_vertical_lines(preprocessed_image)
+    horizontal_lines = extract_horizontal_lines(preprocessed_image)
+
+    plt.figure(figsize=(12, 4))
+
+    plt.subplot(1, 3, 1)
+    plt.imshow(preprocessed_image, cmap='gray')
+    plt.title("Original Image")
+    plt.axis("off")
+
+    plt.subplot(1, 3, 2)
+    plt.imshow(vertical_lines, cmap='gray')
+    plt.title("Detected Vertical Lines")
+    plt.axis("off")
+
+    plt.subplot(1, 3, 3)
+    plt.imshow(horizontal_lines, cmap='gray')
+    plt.title("Detected Horizontal Lines")
+    plt.axis("off")
+
+    plt.tight_layout()
+    plt.show()
